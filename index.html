@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta -->
+    <title>
+        Tiny Painter
+    </title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    />
+
+    <!-- Styles -->
+    <link
+        rel="stylesheet"
+        href="./style.css"
+    />
+</head>
+
+<body>
+    <main id="main">
+        <canvas id="can"></canvas>
+        <div
+            class="icon-tools"
+            onclick="main.classList.add('overlay-tools');"
+            onmouseover="buttonHover = true"
+            onmouseleave="buttonHover = false"
+        ></div>
+        <div class="tools overlay">
+            <div class="icon-back" onclick="main.classList.remove('overlay-tools')"></div>
+            <div class="size" onclick="main.classList.add('overlay-size')"></div>
+            <div class="colors" onclick="main.classList.add('overlay-colors')">
+                <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="save" onclick="saveImage()"></div>
+            <div class="clear" onclick="clearImage()"></div>
+        </div>
+        <div class="colors overlay" id="pallette">
+            <div class="icon-back" onclick="main.classList.remove('overlay-colors')"></div>
+        </div>
+        <div class="size overlay" id="sizer">
+            <div class="icon-back" onclick="main.classList.remove('overlay-size')"></div>
+        </div>
+        <canvas id="cursorCan"></canvas>
+    </main>
+    <aside id="aside"></aside>
+
+    <script src="./script.js"></script>
+</body>
+
+</html>

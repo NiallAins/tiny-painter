@@ -1,0 +1,403 @@
+body {
+    background-color: #d4f5f1;
+}
+
+main {
+    position: fixed;
+    left: calc(50% - 50px);
+    top: calc(50% - 25px);
+    width: 100px;
+    height: 50px;
+    overflow: hidden;
+    cursor: none;
+    background-color: white;
+}
+
+aside {
+    position: fixed;
+    left: 5px;
+    right: 5px;
+    top: calc(50% + 45px);
+    bottom: 5px;
+    text-align: center;
+    
+    &>div {
+        position: relative;
+        display: inline-block;
+        width: 100px;
+        height: 50px;
+        margin: 5px;
+        transition: opacity 1s;
+        
+        &.hide {
+            opacity: 0;
+        }
+        
+        button {
+            position: absolute;
+            border: 0;
+            width: 30px;
+            height: 30px;
+            top: 10px;
+            background-color: #0000;
+            transition: transform 0.4s;
+            z-index: 10;
+            opacity: 0;
+            cursor: pointer;
+            outline: none;
+            
+            &.copy {
+                left: 3px;
+                
+                &:before, &:after {
+                    content: '';
+                    position: absolute;
+                    width: 10px;
+                    height: 15px;
+                    background-color: #fff;
+                    border: 1px solid #000;
+                }
+                &:before {
+                    top: 3px;
+                    right: 4px;
+                }
+                &:after {
+                    top: 10px;
+                    left: 6px;
+                }
+            }
+            
+            &.download {
+                left: 35px;
+                
+                &:before, &:after {
+                    content: '';
+                    position: absolute;
+                }
+                &:before {
+                    width: 3px;
+                    height: 20px;
+                    top: 5px;
+                    left: 13px;
+                    background-color: #fff;
+                }
+                &:after {
+                    top: 10px;
+                    left: 8px;
+                    width: 12px;
+                    height: 12px;
+                    border: solid #fff;
+                    border-width: 0 2px 2px 0;
+                    transform: rotate(45deg);
+                }
+            }
+            
+            &.delete {
+                left: 68px;
+                
+                &:before, &:after {
+                    content: '';
+                    position: absolute;
+                    top: 7px;
+                    left: 13px;
+                    width: 2px;
+                    height: 18px;
+                    background-color: #fff;
+                    transform: rotate(45deg);
+                }
+                &:after {
+                    transform: rotate(-45deg);
+                }
+            }
+            
+            &:hover {
+                transform: scale(1.2);
+            }
+        }
+        
+        &:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background-color: #000;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        
+        &:hover:after {
+            opacity: 0.6;
+        }
+        &:hover button {
+            opacity: 1;
+        }
+    }
+}
+
+main, aside>div {
+    box-shadow: 0 2px 5px 0 #0006;
+}
+
+canvas,
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.overlay {
+    background-color: white;
+    left: -120px;
+    transition: left 0.4s;
+    border: 1px solid #ccc;
+}
+
+main.overlay-tools > .tools.overlay,
+main.overlay-size > .size.overlay,
+main.overlay-colors > .colors.overlay,
+main.overlay-shape > .shape.overlay {
+    left: 0;
+}
+
+
+#cursorCan {
+    pointer-events: none;
+    z-index: 100;
+}
+
+[class^="icon-"] {
+    position: relative;
+    
+    &:after {
+        content: '';
+        position: absolute;
+    }
+}
+
+.icon-back {
+    margin-right: -4px;
+    
+    &:after {
+        top: 3px;
+        left: -6px;
+        border: solid transparent;
+        border-width: 5px 8px;
+        border-right-color: black;
+        opacity: 0.4;
+        transition: opacity 0.4s;
+    }
+    
+    &:hover:after {
+        opacity: 1;
+    }
+}
+
+.icon-tools {
+    display: inline-block;
+    height: 10px;
+    width: 1px;
+    top: -2px;
+    left: 3px;
+    
+    &:after {
+        border: solid transparent;
+        border-width: 5px 8px;
+        border-left-color: #000;
+        transition:
+            transform 0.4s,
+            opacity 0.4s;
+        opacity: 0.4;
+    }
+    
+    &:hover:after {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    
+    &:before {
+        content: '';
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        border: solid transparent;
+        border-width: 6px 10px;
+        border-left-color: #fff;
+        transition:
+            transform 0.4s,
+            opacity 0.4s;
+        opacity: 0.4;
+    }
+    
+    &:hover:before {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
+
+.tools.overlay div {
+    &:not(:first-child) {
+        display: inline-block;
+    }
+    width: 19px;
+    height: 20px;
+    transition: transform 0.4s;
+    
+    &:hover {
+        transform: scale(1.2);
+    }
+    
+    &.size {
+        position: relative;
+        
+        &:after, &:before {
+            content: '';
+            position: absolute;
+            background-color: #000;
+            border: 1px solid #fff;
+            border-radius: 100%;
+        }
+        &:before {
+            padding: 8px;
+            top: 2px;
+            left: 5px;
+        }
+        &:after {
+            padding: 4px;
+            top: 10px;
+            left: 3px;
+        }
+    }
+    
+    &.colors {
+        padding-left: 4px;
+        
+        span {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 100%;
+            border: 1px solid #fff;
+
+            &:nth-child(1) {
+                border-color: #ccc;
+            }
+            &:nth-child(2) {
+                background-color: black;
+            }
+            &:nth-child(3) {
+                background-color: lightgray;
+            }
+            &:nth-child(4) {
+                background-color: gray;
+            }
+        }
+    }
+    
+    &.save {
+        position: relative;
+        
+        &:after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            width: 6px;
+            height: 16px;
+            border: solid #000;
+            border-width: 0px 2px 2px 0px;
+            transform: rotate(45deg);
+        }
+    }
+    
+    &.clear {
+        position: relative;
+        
+        &:before, &:after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 9px;
+            width: 2px;
+            height: 18px;
+            background-color: #000;
+            transform: rotate(45deg);
+        }
+        &:after {
+            transform: rotate(-45deg);
+        }
+    }
+}
+
+.colors {
+    line-height: 0;
+    padding: 1px 5px;
+    z-index: 0;
+
+    div {
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        margin-left: 2px;
+        border-radius: 100%;
+        border: 1px solid white;
+        
+        &:nth-child(2),
+        &:nth-child(13) {
+            border-color: #ddd;
+        }
+        
+        &:not(:nth-child(1)):hover {
+            transform: scale(1.3, 1.3);
+            transform-origin: 5px 5px;
+            z-index: 10;
+        }
+    }
+}
+
+.size.overlay {
+    vertical-align: middle;
+    
+    &>div:not(:first-child) {
+        position: relative;
+        display: inline-block;
+        width: 19px;
+        height: 22px;
+        margin-top: 16px;
+        text-align: center;
+        border-radius: 100%;
+        line-height: 22px;
+        
+        &>div {
+            display: inline-block;
+            border-radius: 100%;
+            background-color: #777;
+            transition: background-color 0.4s;
+        }
+        
+        &:after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 5px;
+            border: 4px solid transparent;
+            transition: border-bottom-color 0.4s;
+        }
+        
+        &:last-child:after {
+            bottom: -8px;
+        }
+        
+        &:hover {
+            &>div {
+                background-color: #000;
+            }
+            
+            &:after {
+                border-bottom-color: #000;
+            }
+        }
+    }
+}
