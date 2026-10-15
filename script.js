@@ -3,11 +3,11 @@ let
     ctx = can.getContext('2d'),
     curCan = document.getElementById('cursorCan'),
     curCtx = curCan.getContext('2d'),
+    body = document.body,
     main = document.getElementById('main'),
     aside = document.getElementById('aside'),
     pallette = document.getElementById('pallette'),
-    sizer = document.getElementById('sizer'),
-    buttonHover = false;
+    sizer = document.getElementById('sizer');
 can.width = 100;
 can.height = 50;
 ctx.translate(0.5, 0.5);
@@ -31,32 +31,41 @@ let mouse = {
     down: false,
     up: false
 };
-main.onmousemove = e => {
+body.onmousemove = e => {
     mouse.x = e.clientX - main.offsetLeft;
     mouse.y = e.clientY - main.offsetTop;
 };
-main.onmousedown = e => {
+body.onmousedown = e => {
     mouse.down = true;
-    if (!buttonHover) {
-        mouse.press = true;
-    }
-    mouse.prevX = mouse.x;
-    mouse.prevY = mouse.y;
+    mouse.press = true;
     mouse.x = e.clientX - main.offsetLeft;
     mouse.y = e.clientY - main.offsetTop;
+    mouse.prevX = mouse.x + 1;
+    mouse.prevY = mouse.y;
 };
-main.onmouseup = e => {
+body.onmouseup = () => {
     mouse.up = true;
     mouse.press = false;
 };
-main.onmouseleave = e => {
+body.onmouseleave = () => {
     mouse.up = true;
     mouse.press = false;
     mouse.active = false;
 };
-main.onmouseenter = e => {
+body.onmouseenter = () => {
     mouse.active = true;
 };
+body.ontouchstart = e => {
+    mouse.active = true;
+    body.onmousedown(e.touches[0]);
+}
+body.ontouchmove = e => {
+    body.onmousemove(e.touches[0]);
+}
+body.ontouchend = () => {
+    mouse.active = false;
+    body.onmouseup();
+}
 
 [
  'white', 'lightgray', 'gray', 'black',
@@ -95,8 +104,9 @@ function step() {
         mouse.prevX = mouse.x;
         mouse.prevY = mouse.y;
     }
-    
-    drawCursor();
+    if (window.matchMedia("(any-hover: hover)").matches) {
+        drawCursor();
+    }
     mouse.up = false;
     mouse.down = false;
     window.requestAnimationFrame(step);
